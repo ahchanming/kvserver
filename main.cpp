@@ -4,6 +4,7 @@
 #include <sys/fcntl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <assert.h>
 #include "threadpool/task.h"
 #include "threadpool/thread.h"
 #include "threadpool/threadpool.h"
@@ -13,6 +14,7 @@
 #include "kv_cache.h"
 #include "ztest/echo_server.h"
 #include "kv_server.h"
+#include "client/kv_client.h"
 
 
 pthread_t ntid;
@@ -164,9 +166,39 @@ void socketTest(){
     close(server_sockfd);
 }
 
-int main(){
+void ttest(char* str){
+    if (str != NULL)
+        printf("%d\n", strlen(str));
+    assert(str);
+}
+
+void ClientStart(){
+    puts("ClientStart");
+    KVClient* kvClient = new KVClient();
+    kvClient->Init();
+    //TestGet
+    char* value = kvClient->Get("key1");
+    printf("Client Test Get, Data is[%s]", value);
+}
+
+void ServerStart(){
+    printf("ServerStart\n");
     KVServer* kvServer = new KVServer();
     kvServer->Start();
+}
+
+int main(int argc, char ** argv){
+    if (argc < 2){
+        printf("Argc number must more than 3");
+    }
+    if (strcmp("client", argv[1]) == 0){
+        ClientStart();
+    }else if (strcmp("server", argv[1]) == 0){
+        ServerStart();
+    }
+    //printf(strlen(NULL));
+//    KVServer* kvServer = new KVServer();
+//    kvServer->Start();
 //    socketTest();
 //    printf("Hello WOrld");
 //    KV* kvClient =new KV();

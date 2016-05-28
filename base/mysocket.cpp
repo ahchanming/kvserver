@@ -7,10 +7,12 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 #include "mysocket.h"
 
 MySocket::MySocket() {
-
+    m_socketId = socket(AF_INET,SOCK_STREAM, 0);
+    m_sockAddr.sin_family = AF_INET;
 }
 
 MySocket::MySocket(int _port) {
@@ -43,6 +45,10 @@ MySocket* MySocket::Accept() {
     return tmpSocket;
 }
 
+int MySocket::Connect() {
+    return connect(m_socketId, (struct sockaddr *)&m_sockAddr, sizeof(struct sockaddr));
+}
+
 void MySocket::SetSocketId(int _socketId) {
     m_socketId = _socketId;
 }
@@ -66,6 +72,13 @@ void MySocket::Close() {
     close(m_socketId);
 }
 
+void MySocket::SetIP(char *ip) {
+    m_sockAddr.sin_addr.s_addr = inet_addr(ip);
+}
+
+void MySocket::SetPort(int port) {
+    m_sockAddr.sin_port = htons(port);
+}
 
 
 

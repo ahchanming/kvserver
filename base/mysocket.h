@@ -19,6 +19,9 @@ public:
     int Bind();
     int Listen();
     MySocket* Accept();
+    void SetIP(char* ip);
+    void SetPort(int port);
+    int Connect();
     void SetSocketId(int _socketId);
     int GetSocketId();
     char* Read();

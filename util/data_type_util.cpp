@@ -7,36 +7,45 @@
 #include "../kv/kv_defind.h"
 
 int DataTypeUtils::Atoi(char *number) {
-        int result = 0;
-        int len = strlen(number);
-        for (int i = 0; i < len; ++i){
-            result = result * 10 + number[i] - '0';
-        }
-        return result;
+    int result = 0;
+    int len = strlen(number);
+    for (int i = 0; i < len; ++i){
+        result = result * 10 + number[i] - '0';
+    }
+    return result;
 }
 
 
 char* DataTypeUtils::ItoA(int number, int length) {
-        char* result = (char*) malloc(sizeof(char) * length);
-        for (int i = length; i > 0; --i){
-                result[i - 1] = (char)('0' + number % 10);
-                number /= 10;
-        }
-        return result;
+    char* result = (char*) malloc(sizeof(char) * length);
+    for (int i = length; i > 0; --i){
+            result[i - 1] = (char)('0' + number % 10);
+            number /= 10;
+    }
+    return result;
 }
 
 char* DataTypeUtils::DataEncode(int opt, char *key, char *value, int &total) {
-        char* result = (char*) malloc(sizeof(char) * (OPT_LENGTH + KEY_LENGTH + VALUE_LENGTH) + sizeof(key) + sizeof(value));
-        result[0] = '0' - opt;
-        total = 1;
-        strncpy(&result[0 + 1], ItoA(strlen(key), KEY_LENGTH), KEY_LENGTH);
-        total += KEY_LENGTH;
+    char* result = (char*) malloc(sizeof(char) * (OPT_LENGTH + KEY_LENGTH + VALUE_LENGTH) + sizeof(key) + sizeof(value));
+    result[0] = '0' + opt;
+    total = 1;
+    strncpy(&result[0 + 1], ItoA(strlen(key), KEY_LENGTH), KEY_LENGTH);
+    total += KEY_LENGTH;
+
+    if (value != NULL){
         strncpy(&result[total], ItoA(strlen(value), VALUE_LENGTH), VALUE_LENGTH);
-        total += VALUE_LENGTH;
-        strncpy(&result[total], key, strlen(key));
-        total += strlen(key);
+    }else{
+        strncpy(&result[total], ItoA(0, VALUE_LENGTH), VALUE_LENGTH);
+    }
+    total += VALUE_LENGTH;
+
+    strncpy(&result[total], key, strlen(key));
+    total += strlen(key);
+
+    if (value != NULL){
         strncpy(&result[total], value, strlen(value));
         total += strlen(value);
-        return result;
+    }
+    return result;
 }
 

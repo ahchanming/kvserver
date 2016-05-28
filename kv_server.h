@@ -20,6 +20,7 @@ public:
     }
 
     void Run(){
+        m_ptSocket->Write("HelloWorld", 10);
         while (1){
             char* data = m_ptSocket->Read();
             printf("Tid is %u, ClientId is [%d], ReadData is [%s]\n", (unsigned long)pthread_self(), m_ptSocket->GetSocketId(), data);
@@ -28,6 +29,7 @@ public:
                 break;
             }
             m_ptSocket->Write(data, strlen(data));
+            sleep(60);
         }
         //printf("Tid is %u, the task Number is %d\n", (unsigned long)pthread_self(), m_iClientId);
     }
