@@ -3,6 +3,7 @@
 //
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "data_type_util.h"
 #include "../kv/kv_defind.h"
 
@@ -47,5 +48,39 @@ char* DataTypeUtils::DataEncode(int opt, char *key, char *value, int &total) {
         total += strlen(value);
     }
     return result;
+}
+
+int DataTypeUtils::DataDecode(int &opt, char* &key, char* &value,  const char *decodeStr) {
+    if (strlen(decodeStr) < 9){
+        printf("DecodeStr Lenth Error, decodeStr is [%s]\n", decodeStr);
+        return -1;
+    }
+    opt = '0' + decodeStr[0];
+    char* keyLength = (char *)malloc(sizeof(char) * 4);
+    char* valueLength = (char*) malloc(sizeof(char) * 4);
+    strncpy(keyLength, decodeStr + OPT_LENGTH, KEY_LENGTH);
+    strncpy(valueLength, decodeStr + OPT_LENGTH + KEY_LENGTH, VALUE_LENGTH);
+    int iKeyLength= Atoi(keyLength);
+    int iValueLength = Atoi(valueLength);
+    if (iKeyLength < 0){
+        printf("keyLength invaild, data is[%s]\n", keyLength);
+        return  -1;
+    }else{
+        char* tmpKey = (char*)malloc(sizeof(char) * iKeyLength + 1);
+        strncpy(tmpKey, decodeStr + OPT_LENGTH + KEY_LENGTH + VALUE_LENGTH, iKeyLength);
+        tmpKey[iKeyLength] = 0;
+        key = tmpKey;
+    }
+    if (iValueLength < 0){
+        printf("valueLength invaild, data is[%s]\n", valueLength);
+        return -1;
+    }else{
+        char* tmpValue = (char*)malloc(sizeof(char) * iValueLength + 1);
+        strncpy(tmpValue, decodeStr + OPT_LENGTH + KEY_LENGTH +VALUE_LENGTH + iKeyLength, iValueLength);
+        tmpValue[iValueLength] = 0;
+        value = tmpValue;
+    }
+    free(keyLength);
+    free(valueLength);
 }
 

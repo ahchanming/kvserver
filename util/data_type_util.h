@@ -13,6 +13,7 @@ public:
     static int Atoi(char *number);
     static char* ItoA(int number, int length);
     static char* DataEncode(int opt, char* key, char* value, int &length);
+    static int DataDecode(int &opt, char* &key, char* &value, const char* decodeStr);
 };
 
 
