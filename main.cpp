@@ -15,6 +15,7 @@
 #include "ztest/echo_server.h"
 #include "kv_server.h"
 #include "client/kv_client.h"
+#include "base/hashmap.h"
 
 
 pthread_t ntid;
@@ -195,6 +196,13 @@ int main(int argc, char ** argv){
         ClientStart();
     }else if (strcmp("server", argv[1]) == 0){
         ServerStart();
+    }else{
+        HashMap* hmap = new HashMap();
+        char* key = "a";
+        char* value = "This is a";
+        hmap->Put(key, value, 1);
+        char* answer = (char*)hmap->Get(key, 1, 1);
+        printf("%s\n", answer);
     }
     //printf(strlen(NULL));
 //    KVServer* kvServer = new KVServer();
